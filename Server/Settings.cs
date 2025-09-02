@@ -62,6 +62,7 @@ public class Settings {
     public class BanListTable {
         public bool Enabled { get; set; } = false;
         public ISet<Guid> Players { get; set; } = new SortedSet<Guid>();
+        public IDictionary<Guid, string> PlayerNames { get; set; } = new Dictionary<Guid, string>();
         public ISet<string> IpAddresses { get; set; } = new SortedSet<string>();
         public ISet<string> Stages { get; set; } = new SortedSet<string>();
         public ISet<sbyte> GameModes { get; set; } = new SortedSet<sbyte>();
@@ -78,6 +79,9 @@ public class Settings {
         public string Prefix { get; set; } = "$";
         public string? CommandChannel { get; set; }
         public string? LogChannel { get; set; }
+        public string? TestGuildId { get; set; }
+        public bool UseModernBot { get; set; } = true;
+        public bool UseLegacyBot { get; set; } = false;
     }
 
     public class ShineTable {

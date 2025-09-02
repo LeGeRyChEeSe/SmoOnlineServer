@@ -1,0 +1,297 @@
+{
+  "commands": {
+    "server": {
+      "status": {
+        "name": "statut",
+        "description": "Afficher le statut et les informations du serveur"
+      },
+      "players": {
+        "name": "joueurs", 
+        "description": "Lister tous les joueurs connectés"
+      }
+    },
+    "admin": {
+      "ban": {
+        "name": "bannir",
+        "description": "Bannir un joueur du serveur",
+        "options": {
+          "player": {
+            "name": "joueur",
+            "description": "Nom du joueur à bannir"
+          }
+        }
+      },
+      "unban": {
+        "name": "debannir", 
+        "description": "Débannir un joueur du serveur",
+        "options": {
+          "player": {
+            "name": "joueur",
+            "description": "Nom du joueur à débannir"
+          }
+        }
+      },
+      "kick": {
+        "name": "expulser",
+        "description": "Expulser un joueur du serveur", 
+        "options": {
+          "player": {
+            "name": "joueur",
+            "description": "Nom du joueur à expulser"
+          }
+        }
+      },
+      "teleport": {
+        "name": "teleporter",
+        "description": "Téléporter un joueur vers un niveau",
+        "stage": {
+          "name": "niveau",
+          "description": "Nom du niveau"
+        },
+        "id": {
+          "name": "id",
+          "description": "ID du niveau"
+        },
+        "scenario": {
+          "name": "scenario",
+          "description": "Numéro de scénario (-1 à 127)"
+        },
+        "player": {
+          "name": "joueur",
+          "description": "Nom du joueur à téléporter"
+        }
+      }
+    },
+    "game": {
+      "shine": {
+        "name": "lune",
+        "description": "Commandes de synchronisation des lunes",
+        "subcommands": {
+          "sync": {
+            "name": "sync",
+            "description": "Forcer la synchronisation des lunes"
+          },
+          "clear": {
+            "name": "vider", 
+            "description": "Vider toutes les lunes collectées"
+          }
+        }
+      },
+      "flip": {
+        "name": "retourner",
+        "description": "Gestion des effets de retournement",
+        "list": {
+          "name": "retourner-liste",
+          "description": "Lister tous les joueurs retournés"
+        },
+        "add": {
+          "name": "retourner-ajouter", 
+          "description": "Ajouter un joueur à la liste des retournés",
+          "player": {
+            "name": "id-joueur",
+            "description": "ID du joueur à retourner"
+          }
+        },
+        "remove": {
+          "name": "retourner-retirer",
+          "description": "Retirer un joueur de la liste des retournés", 
+          "player": {
+            "name": "id-joueur",
+            "description": "ID du joueur à remettre"
+          }
+        },
+        "toggle": {
+          "name": "retourner-basculer",
+          "description": "Activer ou désactiver le retournement des joueurs",
+          "enabled": {
+            "name": "active",
+            "description": "Activer ou désactiver le retournement"
+          }
+        },
+        "options": {
+          "player": {
+            "name": "joueur",
+            "description": "Joueur sur qui appliquer l'effet"
+          },
+          "action": {
+            "name": "action",
+            "description": "Action de retournement (set/reset/both)"
+          }
+        }
+      },
+      "tag": {
+        "name": "cache",
+        "description": "Gestion du mode de jeu cache-cache",
+        "subcommands": {
+          "start": {
+            "name": "demarrer",
+            "description": "Démarrer une partie de cache-cache"
+          },
+          "stop": {
+            "name": "arreter", 
+            "description": "Arrêter la partie de cache-cache actuelle"
+          },
+          "seeker": {
+            "name": "chercheur",
+            "description": "Définir un joueur comme chercheur",
+            "options": {
+              "player": {
+                "name": "joueur",
+                "description": "Joueur à définir comme chercheur"
+              }
+            }
+          }
+        }
+      }
+    },
+    "settings": {
+      "reload": {
+        "name": "recharger",
+        "description": "Recharger la configuration du serveur"
+      },
+      "view": {
+        "name": "voir",
+        "description": "Voir les paramètres actuels du serveur"
+      }
+    }
+  },
+  "responses": {
+    "server": {
+      "status_title": "Statut du Serveur",
+      "status_info": "**Serveur:** {0}\n**Port:** {1}\n**Joueurs Connectés:** {2}\n**Temps de fonctionnement:** {3}",
+      "players_title": "Joueurs Connectés",
+      "no_players": "Aucun joueur actuellement connecté",
+      "player_info": "**{0}** - Niveau: {1} | Scénario: {2}"
+    },
+    "admin": {
+      "admin_only": "❌ Cette commande nécessite les permissions administrateur",
+      "player_banned": "✅ Le joueur **{0}** a été banni",
+      "player_unbanned": "✅ Le joueur **{0}** a été débanni", 
+      "player_kicked": "✅ Le joueur **{0}** a été expulsé",
+      "player_not_found": "❌ Joueur introuvable : **{0}**",
+      "player_teleported": "✅ Joueur **{0}** téléporté vers **{1}**",
+      "invalid_stage": "❌ Nom de niveau invalide : **{0}**",
+      "invalid_scenario": "❌ Numéro de scénario invalide : **{0}** (plage : -1 à 127)"
+    },
+    "game": {
+      "shine_synced": "✅ Données des lunes synchronisées",
+      "shine_cleared": "✅ Toutes les lunes collectées ont été vidées",
+      "flip_applied": "✅ Effet de retournement **{0}** appliqué à **{1}**",
+      "flip": {
+        "list_title": "🔄 Joueurs Retournés",
+        "no_players": "📝 Aucun joueur n'est actuellement retourné",
+        "player_added": "🔄 Joueur **{0}** ajouté à la liste des retournés",
+        "player_removed": "✅ Joueur **{0}** retiré de la liste des retournés",
+        "player_not_found": "⚠️ Le joueur **{0}** n'était pas dans la liste des retournés",
+        "invalid_id": "❌ Format d'ID joueur invalide : {0}",
+        "enabled": "🔄 Le retournement des joueurs a été **activé**",
+        "disabled": "🔄 Le retournement des joueurs a été **désactivé**"
+      },
+      "tag_started": "✅ Partie de cache-cache démarrée !",
+      "tag_stopped": "✅ Partie de cache-cache arrêtée",
+      "tag_seeker_set": "✅ **{0}** est maintenant le chercheur",
+      "tag_not_active": "❌ Aucune partie de cache-cache n'est actuellement active"
+    },
+    "settings": {
+      "reloaded": "✅ Paramètres du serveur rechargés avec succès",
+      "reload_error": "❌ Erreur lors du rechargement des paramètres : {0}",
+      "settings_title": "Paramètres du Serveur",
+      "settings_info": "**Joueurs Max:** {0}\n**Persistance des Lunes:** {1}\n**Retournement des Joueurs:** {2}"
+    },
+    "errors": {
+      "general": "❌ Une erreur s'est produite : {0}",
+      "command_failed": "❌ Échec de l'exécution de la commande",
+      "internal_error": "❌ Erreur interne du serveur",
+      "server_unavailable": "❌ Le serveur n'est pas disponible"
+    },
+    "language": {
+      "title": "🌐 Paramètres de Langue",
+      "current_language": "Langue Actuelle",
+      "current_info": "{0} ({1})",
+      "user_set": "Préférence utilisateur",
+      "auto_detected": "Détection automatique",
+      "current": "actuelle",
+      "available_languages": "Langues Disponibles",
+      "how_to_change": "Comment Changer",
+      "change_instructions": "Utilisez les boutons ci-dessous ou la commande `/set-language`",
+      "language_changed": "✅ {0} Langue changée vers **{1}**",
+      "language_reset": "✅ {0} Langue réinitialisée vers **{1}** (détection automatique)",
+      "unsupported_language": "❌ La langue `{0}` n'est pas supportée",
+      "names": {
+        "en": "Anglais",
+        "fr": "Français",
+        "es": "Espagnol",
+        "de": "Allemand",
+        "it": "Italien"
+      }
+    },
+    "ban": {
+      "title": "🔨 Liste des Bannissements",
+      "system_status": "**Système de Ban:** {0}",
+      "enabled": "✅ Activé",
+      "disabled": "❌ Désactivé",
+      "banned_players": "**Joueurs Bannis:**",
+      "banned_ips": "**Adresses IP Bannies:**",
+      "banned_stages": "**Niveaux Bannis:**",
+      "banned_gamemodes": "**Modes de Jeu Bannis:**",
+      "no_bans": "*Aucun bannissement actuellement actif.*",
+      "player_banned": "🔨 Le joueur **{0}** a été banni (Profil + IP)",
+      "unbanned": "✅ Débanni: {0}",
+      "nothing_unbanned": "❌ Rien n'a été débanni",
+      "multiple_params_error": "❌ Vous ne pouvez pas spécifier à la fois `player` et `player_id`",
+      "no_params_error": "❌ Vous devez spécifier au moins un paramètre: `player`, `player_id`, ou `ip`",
+      "player_not_in_banlist": "❌ Le joueur **{0}** n'a pas été trouvé dans la liste des bannis",
+      "playerid_not_in_banlist": "❌ L'ID joueur **{0}** n'a pas été trouvé dans la liste des bannis",
+      "ip_not_in_banlist": "❌ L'adresse IP **{0}** n'a pas été trouvée dans la liste des bannis",
+      "invalid_playerid_format": "❌ Format d'ID joueur invalide: **{0}**",
+      "invalid_ip_format": "❌ Format d'adresse IP invalide: **{0}**",
+      "player_crashed": "💥 Le joueur **{0}** a été crashé",
+      "player_rejoined": "🔄 Le joueur **{0}** a été forcé à se reconnecter",
+      "maxplayers_set": "✅ Nombre maximum de joueurs défini à **{0}**. Tous les joueurs ont été déconnectés pour appliquer les changements.",
+      "invalid_maxplayers": "❌ Nombre de joueurs invalide: {0}. Doit être entre 1 et {1}"
+    },
+    "shine": {
+      "title": "🌙 Statut de Collection des Lunes",
+      "collected_moons": "**Lunes Collectées:** {0}",
+      "excluded_moons": "**Lunes Exclues:** {0}",
+      "data_unavailable": "❌ Les données des lunes ne sont pas disponibles",
+      "cleared": "✅ **Toutes les lunes collectées ont été vidées**",
+      "synced": "✅ **Données des lunes synchronisées automatiquement**",
+      "sent": "🌙 Lune **{0}** envoyée à **{1}** joueur(s): {2}",
+      "sync_enabled": "🌙 La synchronisation des lunes a été **activée**",
+      "sync_disabled": "🌙 La synchronisation des lunes a été **désactivée**",
+      "excluded": "🚫 La lune **{0}** a été exclue de la synchronisation",
+      "included": "✅ La lune **{0}** a été incluse dans la synchronisation",
+      "server_unavailable": "❌ Le serveur ou les données des lunes ne sont pas disponibles"
+    },
+    "teleport": {
+      "no_players_found": "❌ Aucun joueur trouvé correspondant à: {0}",
+      "teleported": "📍 **{0}** joueur(s) ({1}) téléporté(s) vers **{2}** (scénario {3})",
+      "teleported_all": "📍 Tous les **{0}** joueur(s) téléportés vers **{1}**",
+      "no_players_connected": "❌ Aucun joueur actuellement connecté",
+      "invalid_stage_with_help": "❌ Nom de niveau invalide: {0}\\n```{1}```"
+    },
+    "tag": {
+      "time_set": "⏱️ Minuteur de cache-cache défini à **{0}:{1:D2}** pour **{2}** joueur(s): {3}",
+      "seeking_set": "👁️ **{0}** joueur(s) défini(s) à **{1}**: {2}",
+      "seeking_status": "chercheur",
+      "hiding_status": "caché",
+      "invalid_minutes": "❌ Minutes invalides: {0} (plage: 0-65535)",
+      "invalid_seconds": "❌ Secondes invalides: {0} (plage: 0-59)"
+    },
+    "flip": {
+      "pov_set": "🔄 Point de vue de retournement défini à **{0}**",
+      "scenario_merge_enabled": "🎬 La fusion de scénarios a été **activée**",
+      "scenario_merge_disabled": "🎬 La fusion de scénarios a été **désactivée**"
+    }
+  },
+  "embeds": {
+    "colors": {
+      "success": "0x00FF00",
+      "error": "0xFF0000", 
+      "info": "0x0099FF",
+      "warning": "0xFFAA00"
+    },
+    "footer": "Serveur Super Mario Odyssey Online"
+  }
+}

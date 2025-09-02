@@ -34,6 +34,8 @@ public class Client : IDisposable {
     public Client(Client other, Socket socket) {
         Metadata       = other.Metadata;
         Connected      = other.Connected;
+        Ignored        = other.Ignored;
+        Banned         = other.Banned;
         CurrentCostume = other.CurrentCostume;
         Id             = other.Id;
         Socket         = socket;

@@ -1,0 +1,297 @@
+{
+  "commands": {
+    "server": {
+      "status": {
+        "name": "status",
+        "description": "Show server status and information"
+      },
+      "players": {
+        "name": "players", 
+        "description": "List all connected players"
+      }
+    },
+    "admin": {
+      "ban": {
+        "name": "ban",
+        "description": "Ban a player from the server",
+        "options": {
+          "player": {
+            "name": "player",
+            "description": "Player name to ban"
+          }
+        }
+      },
+      "unban": {
+        "name": "unban", 
+        "description": "Unban a player from the server",
+        "options": {
+          "player": {
+            "name": "player",
+            "description": "Player name to unban"
+          }
+        }
+      },
+      "kick": {
+        "name": "kick",
+        "description": "Kick a player from the server", 
+        "options": {
+          "player": {
+            "name": "player",
+            "description": "Player name to kick"
+          }
+        }
+      },
+      "teleport": {
+        "name": "teleport",
+        "description": "Teleport a player to a stage",
+        "stage": {
+          "name": "stage",
+          "description": "Stage name"
+        },
+        "id": {
+          "name": "id",
+          "description": "Stage ID"
+        },
+        "scenario": {
+          "name": "scenario",
+          "description": "Scenario number (-1 to 127)"
+        },
+        "player": {
+          "name": "player",
+          "description": "Player name to teleport"
+        }
+      }
+    },
+    "game": {
+      "shine": {
+        "name": "shine",
+        "description": "Moon/Shine synchronization commands",
+        "subcommands": {
+          "sync": {
+            "name": "sync",
+            "description": "Force synchronize moon data"
+          },
+          "clear": {
+            "name": "clear", 
+            "description": "Clear all collected moons"
+          }
+        }
+      },
+      "flip": {
+        "name": "flip",
+        "description": "Player flip effects management",
+        "list": {
+          "name": "flip-list",
+          "description": "List all flipped players"
+        },
+        "add": {
+          "name": "flip-add", 
+          "description": "Add a player to the flip list",
+          "player": {
+            "name": "player-id",
+            "description": "Player ID to flip"
+          }
+        },
+        "remove": {
+          "name": "flip-remove",
+          "description": "Remove a player from the flip list", 
+          "player": {
+            "name": "player-id",
+            "description": "Player ID to unflip"
+          }
+        },
+        "toggle": {
+          "name": "flip-toggle",
+          "description": "Enable or disable player flipping",
+          "enabled": {
+            "name": "enabled",
+            "description": "Enable or disable flip"
+          }
+        },
+        "options": {
+          "player": {
+            "name": "player",
+            "description": "Player to apply flip effect"
+          },
+          "action": {
+            "name": "action",
+            "description": "Flip action (set/reset/both)"
+          }
+        }
+      },
+      "tag": {
+        "name": "tag",
+        "description": "Tag game mode management",
+        "subcommands": {
+          "start": {
+            "name": "start",
+            "description": "Start a tag game"
+          },
+          "stop": {
+            "name": "stop", 
+            "description": "Stop the current tag game"
+          },
+          "seeker": {
+            "name": "seeker",
+            "description": "Set a player as seeker",
+            "options": {
+              "player": {
+                "name": "player",
+                "description": "Player to set as seeker"
+              }
+            }
+          }
+        }
+      }
+    },
+    "settings": {
+      "reload": {
+        "name": "reload",
+        "description": "Reload server configuration from file"
+      },
+      "view": {
+        "name": "view",
+        "description": "View current server settings"
+      }
+    }
+  },
+  "responses": {
+    "server": {
+      "status_title": "Server Status",
+      "status_info": "**Server:** {0}\n**Port:** {1}\n**Connected Players:** {2}\n**Uptime:** {3}",
+      "players_title": "Connected Players",
+      "no_players": "No players currently connected",
+      "player_info": "**{0}** - Stage: {1} | Scenario: {2}"
+    },
+    "admin": {
+      "admin_only": "❌ This command requires administrator permissions",
+      "player_banned": "✅ Player **{0}** has been banned",
+      "player_unbanned": "✅ Player **{0}** has been unbanned", 
+      "player_kicked": "✅ Player **{0}** has been kicked",
+      "player_not_found": "❌ Player not found: **{0}**",
+      "player_teleported": "✅ Player **{0}** teleported to **{1}**",
+      "invalid_stage": "❌ Invalid stage name: **{0}**",
+      "invalid_scenario": "❌ Invalid scenario number: **{0}** (range: -1 to 127)"
+    },
+    "game": {
+      "shine_synced": "✅ Moon data synchronized",
+      "shine_cleared": "✅ All collected moons cleared",
+      "flip_applied": "✅ Flip effect **{0}** applied to **{1}**",
+      "flip": {
+        "list_title": "🔄 Flipped Players",
+        "no_players": "📝 No players are currently flipped",
+        "player_added": "🔄 Added player **{0}** to flipped players list",
+        "player_removed": "✅ Removed player **{0}** from flipped players list",
+        "player_not_found": "⚠️ Player **{0}** was not in the flipped players list",
+        "invalid_id": "❌ Invalid player ID format: {0}",
+        "enabled": "🔄 Player flipping has been **enabled**",
+        "disabled": "🔄 Player flipping has been **disabled**"
+      },
+      "tag_started": "✅ Tag game started!",
+      "tag_stopped": "✅ Tag game stopped",
+      "tag_seeker_set": "✅ **{0}** is now the seeker",
+      "tag_not_active": "❌ No tag game is currently active"
+    },
+    "settings": {
+      "reloaded": "✅ Server settings reloaded successfully",
+      "reload_error": "❌ Error reloading settings: {0}",
+      "settings_title": "Server Settings",
+      "settings_info": "**Max Players:** {0}\n**Persist Shines:** {1}\n**Flip Players:** {2}"
+    },
+    "errors": {
+      "general": "❌ An error occurred: {0}",
+      "command_failed": "❌ Command failed to execute",
+      "internal_error": "❌ Internal server error",
+      "server_unavailable": "❌ Server is not available"
+    },
+    "language": {
+      "title": "🌐 Language Settings",
+      "current_language": "Current Language",
+      "current_info": "{0} ({1})",
+      "user_set": "User preference",
+      "auto_detected": "Auto-detected",
+      "current": "current",
+      "available_languages": "Available Languages",
+      "how_to_change": "How to Change",
+      "change_instructions": "Use the buttons below or `/set-language` command",
+      "language_changed": "✅ {0} Language changed to **{1}**",
+      "language_reset": "✅ {0} Language reset to **{1}** (auto-detection)",
+      "unsupported_language": "❌ Language `{0}` is not supported",
+      "names": {
+        "en": "English",
+        "fr": "French",
+        "es": "Spanish",
+        "de": "German",
+        "it": "Italian"
+      }
+    },
+    "ban": {
+      "title": "🔨 Ban List",
+      "system_status": "**Ban System:** {0}",
+      "enabled": "✅ Enabled",
+      "disabled": "❌ Disabled",
+      "banned_players": "**Banned Players:**",
+      "banned_ips": "**Banned IP Addresses:**",
+      "banned_stages": "**Banned Stages:**",
+      "banned_gamemodes": "**Banned Game Modes:**",
+      "no_bans": "*No bans currently active.*",
+      "player_banned": "🔨 Player **{0}** has been banned (Profile + IP)",
+      "unbanned": "✅ Unbanned: {0}",
+      "nothing_unbanned": "❌ Nothing was unbanned",
+      "multiple_params_error": "❌ You cannot specify both `player` and `player_id` at the same time",
+      "no_params_error": "❌ You must specify at least one parameter: `player`, `player_id`, or `ip`",
+      "player_not_in_banlist": "❌ Player **{0}** was not found in ban list",
+      "playerid_not_in_banlist": "❌ Player ID **{0}** was not found in ban list",
+      "ip_not_in_banlist": "❌ IP address **{0}** was not found in ban list",
+      "invalid_playerid_format": "❌ Invalid player ID format: **{0}**",
+      "invalid_ip_format": "❌ Invalid IP address format: **{0}**",
+      "player_crashed": "💥 Player **{0}** has been crashed",
+      "player_rejoined": "🔄 Player **{0}** has been forced to rejoin",
+      "maxplayers_set": "✅ Maximum players set to **{0}**. All players have been disconnected to apply changes.",
+      "invalid_maxplayers": "❌ Invalid player count: {0}. Must be between 1 and {1}"
+    },
+    "shine": {
+      "title": "🌙 Moon Collection Status",
+      "collected_moons": "**Collected Moons:** {0}",
+      "excluded_moons": "**Excluded Moons:** {0}",
+      "data_unavailable": "❌ Shine data is not available",
+      "cleared": "✅ **All collected moons have been cleared**",
+      "synced": "✅ **Moon data synchronized automatically**",
+      "sent": "🌙 Sent moon **{0}** to **{1}** player(s): {2}",
+      "sync_enabled": "🌙 Moon synchronization has been **enabled**",
+      "sync_disabled": "🌙 Moon synchronization has been **disabled**",
+      "excluded": "🚫 Moon **{0}** has been excluded from synchronization",
+      "included": "✅ Moon **{0}** has been included in synchronization",
+      "server_unavailable": "❌ Server or shine data is not available"
+    },
+    "teleport": {
+      "no_players_found": "❌ No players found matching: {0}",
+      "teleported": "📍 Teleported **{0}** player(s) ({1}) to **{2}** (scenario {3})",
+      "teleported_all": "📍 Teleported all **{0}** player(s) to **{1}**",
+      "no_players_connected": "❌ No players currently connected",
+      "invalid_stage_with_help": "❌ Invalid stage name: {0}\\n```{1}```"
+    },
+    "tag": {
+      "time_set": "⏱️ Set tag timer to **{0}:{1:D2}** for **{2}** player(s): {3}",
+      "seeking_set": "👁️ Set **{0}** player(s) to **{1}**: {2}",
+      "seeking_status": "seeking",
+      "hiding_status": "hiding",
+      "invalid_minutes": "❌ Invalid minutes: {0} (range: 0-65535)",
+      "invalid_seconds": "❌ Invalid seconds: {0} (range: 0-59)"
+    },
+    "flip": {
+      "pov_set": "🔄 Flip point of view set to **{0}**",
+      "scenario_merge_enabled": "🎬 Scenario merging has been **enabled**",
+      "scenario_merge_disabled": "🎬 Scenario merging has been **disabled**"
+    }
+  },
+  "embeds": {
+    "colors": {
+      "success": "0x00FF00",
+      "error": "0xFF0000", 
+      "info": "0x0099FF",
+      "warning": "0xFFAA00"
+    },
+    "footer": "Super Mario Odyssey Online Server"
+  }
+}

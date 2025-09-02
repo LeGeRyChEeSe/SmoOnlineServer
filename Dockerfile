@@ -1,7 +1,7 @@
 ################################################################################
 ##################################################################   build   ###
 
-FROM  --platform=${BUILDPLATFORM}  mcr.microsoft.com/dotnet/sdk:6.0  AS  build
+FROM  --platform=${BUILDPLATFORM}  mcr.microsoft.com/dotnet/sdk:8.0  AS  build
 
 WORKDIR  /app/
 
@@ -13,16 +13,17 @@ ARG TARGETARCH
 # Download NuGet dependencies
 RUN  dotnet  restore  \
     ./Server/Server.csproj  \
-    -r debian.11-`echo $TARGETARCH | sed 's@^amd@x@'`  \
+    -r linux-`echo $TARGETARCH | sed 's@^amd@x@'`  \
 ;
 
 COPY  ./Shared/  ./Shared/
 COPY  ./Server/  ./Server/
+COPY  ./assets/  ./assets/
 
 # Build application binary
 RUN  dotnet  publish  \
     ./Server/Server.csproj  \
-    -r debian.11-`echo $TARGETARCH | sed 's@^amd@x@'`  \
+    -r linux-`echo $TARGETARCH | sed 's@^amd@x@'`  \
     -c Release  \
     -o ./out/  \
     --no-restore  \
@@ -34,7 +35,7 @@ RUN  dotnet  publish  \
 ################################################################################
 ################################################################   runtime   ###
 
-FROM  mcr.microsoft.com/dotnet/runtime:6.0  AS  runtime
+FROM  mcr.microsoft.com/dotnet/runtime:8.0  AS  runtime
 
 # Copy application binary from build stage
 COPY  --from=build  /app/out/  /app/

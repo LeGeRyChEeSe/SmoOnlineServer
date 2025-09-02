@@ -6,8 +6,8 @@ if [[ "$#" == "0" ]] || [[ "$#" > "1" ]] || ! [[ "$1" =~ ^(all|x64|arm|arm64|win
   exit 1
 fi
 
-DIR=$(dirname "$(realpath $0)")
-cd "$DIR"
+# Use current working directory instead of script location
+DOCKER_DIR="$(pwd)"
 
 declare -A archs=(
   ["x64"]="linux-x64"
@@ -24,17 +24,17 @@ for sub in "${!archs[@]}" ; do
   fi
 
   docker  run                         \
-    -u `id -u`:`id -g`                \
-    -v "/$DIR/"://app/                \
-    -w //app/                         \
-    -e DOTNET_CLI_HOME=//app/cache/   \
-    -e XDG_DATA_HOME=//app/cache/     \
-    mcr.microsoft.com/dotnet/sdk:6.0  \
+    --rm                              \
+    -v "$DOCKER_DIR":/app             \
+    -w /app                           \
+    -e DOTNET_CLI_HOME=/app/cache/    \
+    -e XDG_DATA_HOME=/app/cache/      \
+    mcr.microsoft.com/dotnet/sdk:8.0  \
       dotnet  publish                 \
         ./Server/Server.csproj        \
         -r $arch                      \
         -c Release                    \
-        -o /app/bin/$sub/             \
+        -o ./bin/$sub/                \
         --self-contained              \
         -p:publishSingleFile=true     \
   ;
@@ -44,6 +44,11 @@ for sub in "${!archs[@]}" ; do
   if   [[ "$sub" == "arm"   ]] ; then filename="Server.arm";
   elif [[ "$sub" == "arm64" ]] ; then filename="Server.arm64";
   elif [[ "$sub" == "win64" ]] ; then filename="Server.exe"; ext=".exe";
+  fi
+
+  # Copy SMO.ico to release directory before cleanup
+  if [[ -f "./bin/$sub/SMO.ico" ]] ; then
+    cp "./bin/$sub/SMO.ico" "./bin/"
   fi
 
   mv  ./bin/$sub/Server$ext  ./bin/$filename

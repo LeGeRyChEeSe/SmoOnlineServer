@@ -64,6 +64,26 @@ async Task S(string n, Guid otherId, Guid ownId) {
         connectOwner.Dispose();
     }
     
+    // Send a GamePacket so the client appears in Discord commands
+    {
+        GamePacket gamePacket = new GamePacket {
+            Stage = "CapWorldHomeStage",
+            ScenarioNum = 1,
+            Is2d = false
+        };
+        PacketHeader gameHeader = new PacketHeader {
+            Type = PacketType.Game,
+            Id = ownId,
+            PacketSize = gamePacket.Size,
+        };
+        IMemoryOwner<byte> gameOwner = MemoryPool<byte>.Shared.RentZero(Constants.HeaderSize + gamePacket.Size);
+        MemoryMarshal.Write(gameOwner.Memory.Span[..Constants.HeaderSize], ref gameHeader);
+        gamePacket.Serialize(gameOwner.Memory.Span[Constants.HeaderSize..(Constants.HeaderSize + gamePacket.Size)]);
+        await stream.WriteAsync(gameOwner.Memory[..(Constants.HeaderSize + gamePacket.Size)]);
+        gameOwner.Dispose();
+        logger.Info("Sent GamePacket");
+    }
+    
     while (true) {
         IMemoryOwner<byte> owner = MemoryPool<byte>.Shared.RentZero(0xFF);
         if (!await Read(owner.Memory, Constants.HeaderSize, 0)) return;

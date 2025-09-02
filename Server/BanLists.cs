@@ -102,7 +102,7 @@ public static class BanLists {
     }
 
     private static void BanProfile(Client user) {
-        BanProfile(user.Id);
+        BanProfile(user.Id, user.Name);
     }
     private static void BanProfile(string str) {
         if (!Guid.TryParse(str, out Guid id)) { return; }
@@ -110,6 +110,10 @@ public static class BanLists {
     }
     private static void BanProfile(Guid id) {
         Profiles.Add(id);
+    }
+    private static void BanProfile(Guid id, string playerName) {
+        Profiles.Add(id);
+        Settings.Instance.BanList.PlayerNames[id] = playerName;
     }
 
     private static void BanStage(string stage) {
@@ -148,6 +152,7 @@ public static class BanLists {
     }
     private static void UnbanProfile(Guid id) {
         Profiles.Remove(id);
+        Settings.Instance.BanList.PlayerNames.Remove(id);
     }
 
     private static void UnbanStage(string stage) {
@@ -216,8 +221,11 @@ public static class BanLists {
                 }
 
                 if (Profiles.Count > 0) {
-                    list.Append("\nBanned profile IDs:\n- ");
-                    list.Append(string.Join("\n- ", Profiles));
+                    list.Append("\nBanned profile IDs:\n");
+                    foreach (var profileId in Profiles) {
+                        var playerName = Settings.Instance.BanList.PlayerNames.TryGetValue(profileId, out var name) ? name : "Unknown";
+                        list.Append($"- {playerName} ({profileId})\n");
+                    }
                 }
 
                 if (Stages.Count > 0) {
@@ -264,6 +272,11 @@ public static class BanLists {
                     });
                 }
 
+                // Auto-enable ban system when banning players
+                if (!Enabled) {
+                    Enabled = true;
+                }
+
                 foreach (Client user in res.toActUpon) {
                     user.Banned = true;
                     BanClient(user);
@@ -283,6 +296,12 @@ public static class BanLists {
                 if (IsProfileBanned(id)) {
                     return "Profile " + id.ToString() + " is already banned.";
                 }
+                
+                // Auto-enable ban system when banning profile
+                if (!Enabled) {
+                    Enabled = true;
+                }
+                
                 BanProfile(id);
                 CrashMultiple(args, much);
                 Save();
@@ -298,6 +317,12 @@ public static class BanLists {
                 if (IsIPv4Banned(args[0])) {
                     return "IP " + args[0] + " is already banned.";
                 }
+                
+                // Auto-enable ban system when banning IP
+                if (!Enabled) {
+                    Enabled = true;
+                }
+                
                 BanIPv4(args[0]);
                 CrashMultiple(args, much);
                 Save();
@@ -314,6 +339,12 @@ public static class BanLists {
                 if (IsStageBanned(stage)) {
                     return "Stage " + stage + " is already banned.";
                 }
+                
+                // Auto-enable ban system when banning stage
+                if (!Enabled) {
+                    Enabled = true;
+                }
+                
                 var stages = Shared.Stages
                     .StagesByInput(args[0])
                     .Where(s => !IsStageBanned(s))
@@ -335,6 +366,12 @@ public static class BanLists {
                 if (IsGameModeBanned(gameMode)) {
                     return "Gamemode " + gameMode + " is already banned.";
                 }
+                
+                // Auto-enable ban system when banning gamemode
+                if (!Enabled) {
+                    Enabled = true;
+                }
+                
                 BanGameMode(gameMode);
                 Save();
                 return "Banned gamemode: " + gameMode;
@@ -343,8 +380,73 @@ public static class BanLists {
 
 
     public static string HandleUnbanCommand(string[] args) {
+        if (args.Length == 0) {
+            return "Usage: unban <player_name|profile_id|ip_address|stage_name|gamemode> OR unban {profile|ip|stage|gamemode} <value>";
+        }
+
+        // New smart unban - detect type automatically
+        if (args.Length == 1) {
+            string identifier = args[0];
+            
+            // Try as Profile ID (GUID)
+            if (Guid.TryParse(identifier, out Guid profileId)) {
+                if (IsProfileBanned(profileId)) {
+                    var playerName = Settings.Instance.BanList.PlayerNames.TryGetValue(profileId, out var name) ? name : "Unknown";
+                    UnbanProfile(profileId);
+                    Save();
+                    return $"Unbanned player: {playerName} ({profileId})";
+                }
+                return "Profile " + profileId + " is not banned.";
+            }
+            
+            // Try as IP address
+            if (IsIPv4(identifier)) {
+                if (IsIPv4Banned(identifier)) {
+                    UnbanIPv4(identifier);
+                    Save();
+                    return "Unbanned IP: " + identifier;
+                }
+                return "IP " + identifier + " is not banned.";
+            }
+            
+            // Try as player name (search in PlayerNames dictionary)
+            var foundProfileByName = Settings.Instance.BanList.PlayerNames
+                .Where(kvp => kvp.Value.Equals(identifier, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+            
+            if (foundProfileByName.Key != Guid.Empty) {
+                UnbanProfile(foundProfileByName.Key);
+                Save();
+                return $"Unbanned player: {foundProfileByName.Value} ({foundProfileByName.Key})";
+            }
+            
+            // Try as stage name
+            string? stage = Shared.Stages.Input2Stage(identifier);
+            if (stage != null && IsStageBanned(stage)) {
+                var stages = Shared.Stages
+                    .StagesByInput(identifier)
+                    .Where(IsStageBanned)
+                    .ToList();
+                foreach (string s in stages) {
+                    UnbanStage(s);
+                }
+                Save();
+                return "Unbanned stage: " + string.Join(", ", stages);
+            }
+            
+            // Try as gamemode
+            if (GameMode.TryParse(identifier, out GameMode gameMode) && IsGameModeBanned(gameMode)) {
+                UnbanGameMode(gameMode);
+                Save();
+                return "Unbanned gamemode: " + gameMode;
+            }
+            
+            return $"Could not find '{identifier}' in any ban list (tried: player name, profile ID, IP address, stage, gamemode)";
+        }
+
+        // Legacy syntax: unban {type} {value}
         if (args.Length != 2) {
-            return "Usage: unban {profile|ip|stage} <value>";
+            return "Usage: unban <player_name|profile_id|ip_address|stage_name|gamemode> OR unban {profile|ip|stage|gamemode} <value>";
         }
 
         string cmd = args[0];
@@ -352,7 +454,7 @@ public static class BanLists {
 
         switch (cmd) {
             default:
-                return "Usage: unban {profile|ip|stage} <value>";
+                return "Usage: unban {profile|ip|stage|gamemode} <value>";
 
             case "profile":
                 if (!Guid.TryParse(val, out Guid id)) {
@@ -361,9 +463,10 @@ public static class BanLists {
                 if (!IsProfileBanned(id)) {
                     return "Profile " + id.ToString() + " is not banned.";
                 }
+                var playerName = Settings.Instance.BanList.PlayerNames.TryGetValue(id, out var name) ? name : "Unknown";
                 UnbanProfile(id);
                 Save();
-                return "Unbanned profile: " + id.ToString();
+                return $"Unbanned player: {playerName} ({id})";
 
             case "ip":
                 if (!IsIPv4(val)) {

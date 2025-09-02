@@ -189,24 +189,6 @@ public class Server {
                     client.Id   = header.Id;
                     client.Name = connect.ClientName;
 
-                    // is the IPv4 address banned?
-                    if (BanLists.Enabled && BanLists.IsIPv4Banned(((IPEndPoint) socket.RemoteEndPoint!).Address!)) {
-                        Logger.Warn($"Ignoring banned IPv4 address for {client.Name} ({client.Id}/{remote})");
-                        client.Ignored = true;
-                        client.Banned  = true;
-                    }
-                    // is the profile ID banned?
-                    else if (BanLists.Enabled && BanLists.IsProfileBanned(client.Id)) {
-                        client.Logger.Warn($"Ignoring banned profile ID for {client.Name} ({client.Id}/{remote})");
-                        client.Ignored = true;
-                        client.Banned  = true;
-                    }
-                    // is the server full?
-                    else if (Clients.Count(x => x.Connected) >= Settings.Instance.Server.MaxPlayers) {
-                        client.Logger.Error($"Ignoring player {client.Name} ({client.Id}/{remote}) as server reached max players of {Settings.Instance.Server.MaxPlayers}");
-                        client.Ignored = true;
-                    }
-
                     // send server init (required to crash ignored players later)
                     await client.Send(new InitPacket {
                         MaxPlayers = (client.Ignored ? (ushort) 1 : Settings.Instance.Server.MaxPlayers),
@@ -255,6 +237,25 @@ public class Server {
                             default: {
                                 throw new Exception($"Invalid connection type {connect.ConnectionType} for {client.Name} ({client.Id}/{remote})");
                             }
+                        }
+                        
+                        // Check ban status for all clients (new and reconnecting)
+                        var clientIP = ((IPEndPoint) socket.RemoteEndPoint!).Address!;
+                        
+                        if (BanLists.Enabled && BanLists.IsIPv4Banned(clientIP)) {
+                            Logger.Warn($"Ignoring banned IPv4 address for {client.Name} ({client.Id}/{remote})");
+                            client.Ignored = true;
+                            client.Banned  = true;
+                        }
+                        else if (BanLists.Enabled && BanLists.IsProfileBanned(client.Id)) {
+                            client.Logger.Warn($"Ignoring banned profile ID for {client.Name} ({client.Id}/{remote})");
+                            client.Ignored = true;
+                            client.Banned  = true;
+                        }
+                        // is the server full?
+                        else if (Clients.Count(x => x.Connected) >= Settings.Instance.Server.MaxPlayers) {
+                            client.Logger.Error($"Ignoring player {client.Name} ({client.Id}/{remote}) as server reached max players of {Settings.Instance.Server.MaxPlayers}");
+                            client.Ignored = true;
                         }
 
                         client.Connected = true;

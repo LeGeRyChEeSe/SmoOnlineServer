@@ -9,3 +9,6 @@ settings.json
 
 /cache/
 /data/
+
+CLAUDE.md
+/.claude/

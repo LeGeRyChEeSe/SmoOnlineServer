@@ -2,9 +2,13 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Win32Resource />
+        <ApplicationIcon>..\assets\images\SMO.ico</ApplicationIcon>
+        <AssemblyTitle>Super Mario Odyssey Online Server</AssemblyTitle>
+        <AssemblyDescription>A high-performance, feature-rich multiplayer server for Super Mario Odyssey Online</AssemblyDescription>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,7 +17,21 @@
 
     <ItemGroup>
         <PackageReference Include="DSharpPlus" Version="4.3.0-nightly-01142" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Discord.Net.WebSocket" Version="3.15.3" />
+        <PackageReference Include="Discord.Net.Interactions" Version="3.15.3" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Discord\Localization\*.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <Content Include="..\assets\images\SMO.ico">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 
 </Project>

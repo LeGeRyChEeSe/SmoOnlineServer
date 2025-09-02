@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using Server;
+using Server.Discord;
 using Shared;
 using Shared.Packet.Packets;
 using Timer = System.Timers.Timer;
@@ -13,8 +14,47 @@ HashSet<int> shineBag = new HashSet<int>();
 CancellationTokenSource cts = new CancellationTokenSource();
 bool restartRequested = false;
 Logger consoleLogger = new Logger("Console");
-DiscordBot bot = new DiscordBot();
-await bot.Run();
+// Initialisation du bot Discord moderne
+ModernDiscordBot? modernBot = null;
+consoleLogger.Info($"Discord config - UseModernBot: {Settings.Instance.Discord.UseModernBot}, Token: {(!string.IsNullOrEmpty(Settings.Instance.Discord.Token) ? "Set" : "Empty")}, UseLegacyBot: {Settings.Instance.Discord.UseLegacyBot}");
+
+if (Settings.Instance.Discord.UseModernBot && !string.IsNullOrEmpty(Settings.Instance.Discord.Token))
+{
+    consoleLogger.Info("Starting modern Discord bot...");
+    try
+    {
+        modernBot = new ModernDiscordBot();
+        var serverService = modernBot.GetService<ServerService>();
+        serverService?.SetServer(server);
+        serverService?.SetShineBag(shineBag);
+        
+        await modernBot.StartAsync(Settings.Instance.Discord.Token, server);
+        consoleLogger.Info("Modern Discord bot started successfully!");
+    }
+    catch (Exception ex)
+    {
+        consoleLogger.Error($"Failed to start modern Discord bot: {ex}");
+    }
+}
+else if (!Settings.Instance.Discord.UseModernBot && Settings.Instance.Discord.UseLegacyBot)
+{
+    consoleLogger.Info("Starting legacy Discord bot...");
+    try
+    {
+        // Utilisation de l'ancien bot DSharpPlus si configuré
+        DiscordBot bot = new DiscordBot();
+        await bot.Run();
+        consoleLogger.Info("Legacy Discord bot started successfully!");
+    }
+    catch (Exception ex)
+    {
+        consoleLogger.Error($"Failed to start legacy Discord bot: {ex}");
+    }
+}
+else
+{
+    consoleLogger.Info("Discord bot disabled or no token provided");
+}
 
 async Task PersistShines()
 {
@@ -493,8 +533,10 @@ CommandHandler.RegisterCommand("tag", args => {
                     await client.Send(tagPacket);
                 });
             } else if (client != null) {
-                server.Broadcast(tagPacket, client);
-                client.Send(tagPacket);
+                Task.Run(async () => {
+                    await server.Broadcast(tagPacket, client);
+                    await client.Send(tagPacket);
+                });
             }
             return $"Set time for {(args[1] == "*" ? "everyone" : args[1])} to {minutes}:{seconds}";
         }
@@ -513,8 +555,10 @@ CommandHandler.RegisterCommand("tag", args => {
                     await client.Send(tagPacket);
                 });
             } else if (client != null) {
-                server.Broadcast(tagPacket, client);
-                client.Send(tagPacket);
+                Task.Run(async () => {
+                    await server.Broadcast(tagPacket, client);
+                    await client.Send(tagPacket);
+                });
             }
             return $"Set {(args[1] == "*" ? "everyone" : args[1])} to {(seeking ? "seeker" : "hider")}";
         }
