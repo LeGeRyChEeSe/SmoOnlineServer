@@ -14,10 +14,10 @@ public struct TagPacket : IPacket {
 
     public void Serialize(Span<byte> data) {
         byte both = (byte)((byte) UpdateType | ((byte) GameMode << 4));
-        MemoryMarshal.Write(data,      ref both);
-        MemoryMarshal.Write(data[1..], ref IsIt);
-        MemoryMarshal.Write(data[2..], ref Seconds);
-        MemoryMarshal.Write(data[3..], ref Minutes);
+        MemoryMarshal.Write(data,      in both);
+        MemoryMarshal.Write(data[1..], in IsIt);
+        MemoryMarshal.Write(data[2..], in Seconds);
+        MemoryMarshal.Write(data[3..], in Minutes);
     }
 
     public void Deserialize(ReadOnlySpan<byte> data) {

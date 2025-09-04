@@ -2,8 +2,8 @@ version: "3.9"
 
 services:
   server:
-    #image: ghcr.io/sanae6/smo-online-server
-    build: .
+    image: garohrl/smoonlineserver:latest
+    #build: .
     #user: 1000:1000
     stdin_open: true
     restart: unless-stopped
@@ -11,4 +11,3 @@ services:
     - 1027:1027
     volumes:
     - ./data/:/data/
-    - ./settings.json:/data/settings.json

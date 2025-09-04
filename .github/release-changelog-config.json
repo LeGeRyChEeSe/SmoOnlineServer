@@ -1,0 +1,44 @@
+{
+  "template": "## What's Changed\n\n${{ CHANGELOG }}\n\n## Contributors\n\n${{ CONTRIBUTORS }}\n\n**Full Changelog**: https://github.com/${{ OWNER }}/${{ REPO }}/compare/${{ FROM_TAG }}...${{ TO_TAG }}\n\n## Installation\n\n- **Linux**: Download `Server`, `Server.arm`, or `Server.arm64` depending on your architecture\n- **Windows**: Download `Server.exe`\n- **macOS**: Build from source or use `Server` binary\n\nMake sure to also download `SMO.ico` if you want the server icon.",
+  "pr_template": "- ${{ TITLE }} by @${{ AUTHOR }} in #${{ NUMBER }}",
+  "empty_template": "- No changes",
+  "categories": [
+    {
+      "title": "## 🚀 Features",
+      "labels": ["feature", "enhancement"]
+    },
+    {
+      "title": "## 🐛 Bug Fixes", 
+      "labels": ["bug", "bugfix", "fix"]
+    },
+    {
+      "title": "## 🔧 Maintenance",
+      "labels": ["maintenance", "chore", "dependencies"]
+    },
+    {
+      "title": "## 📚 Documentation",
+      "labels": ["documentation", "docs"]
+    },
+    {
+      "title": "## 🔒 Security",
+      "labels": ["security"]
+    },
+    {
+      "title": "## Other Changes",
+      "labels": []
+    }
+  ],
+  "ignore_labels": [
+    "ignore-for-release"
+  ],
+  "sort": {
+    "order": "ASC",
+    "on_property": "mergedAt"
+  },
+  "max_tags_to_fetch": 200,
+  "max_pull_requests": 1000,
+  "max_back_track_time_days": 365,
+  "exclude_merge_branches": [
+    "dependabot/.*"
+  ]
+}

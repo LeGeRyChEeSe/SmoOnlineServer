@@ -13,7 +13,7 @@ help:
 	@echo "  clean        - Clean build artifacts"
 	@echo "  restore      - Restore NuGet packages"
 	@echo "  docker-build - Build Docker images for all architectures"
-	@echo "  docker-run   - Start server with docker-compose"
+	@echo "  docker-run   - Start server with docker compose"
 	@echo "  docker-up    - Start containers in detached mode"
 	@echo "  docker-down  - Stop and remove containers"
 	@echo "  docker-restart - Restart Docker containers"
@@ -72,28 +72,28 @@ docker-build-win64:
 	./docker-build.sh win64
 
 docker-run:
-	docker-compose up --build -d
+	docker compose up --build -d
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down
+	docker compose down
 
 docker-restart:
-	docker-compose restart
+	docker compose restart
 
 docker-logs:
-	docker-compose logs --tail=20 --follow
+	docker compose logs --tail=20 --follow
 
 docker-stop:
-	docker-compose stop
+	docker compose stop
 
 docker-ps:
-	docker-compose ps
+	docker compose ps
 
 docker-exec:
-	docker-compose exec smo-online-server /bin/bash
+	docker compose exec smo-online-server /bin/bash
 
 # Development workflow
 dev: restore build run

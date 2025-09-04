@@ -1,0 +1,46 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - '*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build binaries using docker-build.sh
+        run: |
+          chmod +x ./docker-build.sh
+          ./docker-build.sh all
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configuration: .github/release-changelog-config.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bin/Server
+            bin/Server.arm
+            bin/Server.arm64
+            bin/Server.exe
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

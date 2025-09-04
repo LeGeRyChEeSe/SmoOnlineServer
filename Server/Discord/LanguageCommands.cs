@@ -13,50 +13,87 @@ public class LanguageCommands : ModernDiscordModule
     [SlashCommand("language", "Manage your bot language preferences")]
     public async Task LanguageAsync()
     {
-        var currentLocale = GetBestLocale();
-        var userPreferredLocale = Localization.UserPreferences.GetUserLocale(Context.User.Id);
-        var availableLocales = Localization.GetAvailableLocales().ToList();
-
-        var embed = new EmbedBuilder()
-            .WithTitle(Localization.GetResponse("language.title", currentLocale))
-            .WithColor(Localization.GetEmbedColor("info", currentLocale))
-            .WithFooter(Localization.GetEmbedFooter(currentLocale))
-            .WithTimestamp(DateTimeOffset.Now);
-
-        // Information actuelle
-        var currentInfo = Localization.GetResponse("language.current_info", currentLocale, 
-            GetLocaleName(currentLocale, currentLocale),
-            userPreferredLocale != null ? Localization.GetResponse("language.user_set", currentLocale) : Localization.GetResponse("language.auto_detected", currentLocale));
-        
-        embed.AddField(
-            Localization.GetResponse("language.current_language", currentLocale),
-            currentInfo,
-            false);
-
-        // Langues disponibles
-        var availableLanguagesText = string.Join("\n", availableLocales.Select(locale => 
+        try
         {
-            var flag = GetLanguageFlag(locale);
-            var name = GetLocaleName(locale, currentLocale);
-            var current = locale == currentLocale ? $" **({Localization.GetResponse("language.current", currentLocale)})**" : "";
-            return $"{flag} `{locale}` - {name}{current}";
-        }));
+            // Différer immédiatement la réponse pour éviter les timeouts
+            await DeferAsync();
 
-        embed.AddField(
-            Localization.GetResponse("language.available_languages", currentLocale),
-            availableLanguagesText,
-            false);
+            var currentLocale = GetBestLocale();
+            var userPreferredLocale = Localization.UserPreferences.GetUserLocale(Context.User.Id);
+            var availableLocales = Localization.GetAvailableLocales().ToList();
 
-        // Instructions
-        embed.AddField(
-            Localization.GetResponse("language.how_to_change", currentLocale),
-            Localization.GetResponse("language.change_instructions", currentLocale),
-            false);
+            var embed = new EmbedBuilder()
+                .WithTitle(Localization.GetResponse("language.title", currentLocale))
+                .WithColor(Localization.GetEmbedColor("info", currentLocale))
+                .WithFooter(Localization.GetEmbedFooter(currentLocale))
+                .WithTimestamp(DateTimeOffset.Now);
 
-        // Créer les boutons pour changer de langue
-        var components = CreateLanguageButtons(availableLocales, currentLocale);
+            // Information actuelle
+            var currentInfo = Localization.GetResponse("language.current_info", currentLocale, 
+                GetLocaleName(currentLocale, currentLocale),
+                userPreferredLocale != null ? Localization.GetResponse("language.user_set", currentLocale) : Localization.GetResponse("language.auto_detected", currentLocale));
+            
+            embed.AddField(
+                Localization.GetResponse("language.current_language", currentLocale),
+                currentInfo,
+                false);
 
-        await RespondAsync(embed: embed.Build(), components: components);
+            // Langues disponibles
+            var availableLanguagesText = string.Join("\n", availableLocales.Select(locale => 
+            {
+                var flag = GetLanguageFlag(locale);
+                var name = GetLocaleName(locale, currentLocale);
+                var current = locale == currentLocale ? $" **({Localization.GetResponse("language.current", currentLocale)})**" : "";
+                return $"{flag} `{locale}` - {name}{current}";
+            }));
+
+            embed.AddField(
+                Localization.GetResponse("language.available_languages", currentLocale),
+                availableLanguagesText,
+                false);
+
+            // Instructions
+            embed.AddField(
+                Localization.GetResponse("language.how_to_change", currentLocale),
+                Localization.GetResponse("language.change_instructions", currentLocale),
+                false);
+
+            // Créer les boutons pour changer de langue
+            var components = CreateLanguageButtons(availableLocales, currentLocale);
+
+            await FollowupAsync(embed: embed.Build(), components: components);
+        }
+        catch (TimeoutException ex)
+        {
+            Console.WriteLine($"[ERROR] Language command timeout: {ex.Message}");
+            try
+            {
+                await RespondAsync("❌ The command timed out. Please try again.", ephemeral: true);
+            }
+            catch
+            {
+                // Si même la réponse d'erreur échoue, rien à faire
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Language command error: {ex}");
+            try
+            {
+                if (!Context.Interaction.HasResponded)
+                {
+                    await RespondAsync($"❌ An error occurred: {ex.Message}", ephemeral: true);
+                }
+                else
+                {
+                    await FollowupAsync($"❌ An error occurred: {ex.Message}", ephemeral: true);
+                }
+            }
+            catch (Exception followupEx)
+            {
+                Console.WriteLine($"[ERROR] Failed to send error message: {followupEx}");
+            }
+        }
     }
 
     [SlashCommand("set-language", "Set your preferred bot language")]

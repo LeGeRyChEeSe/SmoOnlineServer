@@ -15,9 +15,9 @@ public struct CapPacket : IPacket {
     public short Size => 0x50;
 
     public void Serialize(Span<byte> data) {
-        MemoryMarshal.Write(data, ref Position);
-        MemoryMarshal.Write(data[12..], ref Rotation);
-        MemoryMarshal.Write(data[28..], ref CapOut);
+        MemoryMarshal.Write(data, in Position);
+        MemoryMarshal.Write(data[12..], in Rotation);
+        MemoryMarshal.Write(data[28..], in CapOut);
         Encoding.UTF8.GetBytes(CapAnim).CopyTo(data[32..(32 + NameSize)]);
     }
 
