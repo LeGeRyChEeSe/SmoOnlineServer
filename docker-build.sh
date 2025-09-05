@@ -47,6 +47,8 @@ for sub in "${!archs[@]}" ; do
   fi
 
 
+  chmod +w ./bin/$sub/Server$ext
+  chmod +w ./bin/
   mv  ./bin/$sub/Server$ext  ./bin/$filename
   rm  -rf  ./bin/$sub/
 done
