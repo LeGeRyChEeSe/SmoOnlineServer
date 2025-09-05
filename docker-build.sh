@@ -67,6 +67,12 @@ for sub in "${!archs[@]}" ; do
   fi
 
 
-  mv  ./bin/$sub/Server$ext  ./bin/$filename
-  rm  -rf  ./bin/$sub/
+  # Fix permissions in GitHub Actions environment
+  if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+    sudo mv  ./bin/$sub/Server$ext  ./bin/$filename
+    sudo rm  -rf  ./bin/$sub/
+  else
+    mv  ./bin/$sub/Server$ext  ./bin/$filename
+    rm  -rf  ./bin/$sub/
+  fi
 done
