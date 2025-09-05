@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.repository_owner }}/smo-online-server
+  IMAGE: garohrl/smoonlineserver
 
 jobs:
   deploy:
