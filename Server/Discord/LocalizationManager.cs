@@ -67,35 +67,13 @@ public class LocalizationManager
     {
         try
         {
-            if (!Directory.Exists(_localizationPath))
-            {
-                _logger.Error($"Localization directory not found: {_localizationPath}");
-                return;
-            }
-
-            var localizationFiles = Directory.GetFiles(_localizationPath, "*.json");
+            // Charger les ressources embarquées
+            LoadEmbeddedLocalizations();
             
-            foreach (var file in localizationFiles)
+            // Si aucune ressource embarquée n'est trouvée, essayer le système de fichiers
+            if (_localizations.Count == 0)
             {
-                var locale = Path.GetFileNameWithoutExtension(file);
-                try
-                {
-                    var jsonContent = File.ReadAllText(file);
-                    var localizationData = JsonSerializer.Deserialize<LocalizationData>(jsonContent, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                    
-                    if (localizationData != null)
-                    {
-                        _localizations[locale] = localizationData;
-                        _logger.Info($"Loaded localization for '{locale}' from {file}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error($"Failed to load localization file {file}: {ex.Message}");
-                }
+                LoadFileSystemLocalizations();
             }
             
             if (!_localizations.ContainsKey("en"))
@@ -110,6 +88,82 @@ public class LocalizationManager
         {
             _logger.Error($"Failed to load localizations: {ex.Message}");
             CreateFallbackLocalization();
+        }
+    }
+
+    private void LoadEmbeddedLocalizations()
+    {
+        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        var resourceNames = assembly.GetManifestResourceNames()
+            .Where(name => name.Contains("Discord.Localization") && name.EndsWith(".json"))
+            .ToArray();
+
+        if (resourceNames.Length == 0)
+        {
+            _logger.Warn("No embedded localization resources found");
+            return;
+        }
+
+        foreach (var resourceName in resourceNames)
+        {
+            try
+            {
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream == null) continue;
+
+                using var reader = new StreamReader(stream);
+                var jsonContent = reader.ReadToEnd();
+                var localizationData = JsonSerializer.Deserialize<LocalizationData>(jsonContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                
+                if (localizationData != null)
+                {
+                    // Extraire le nom de la culture du nom de la ressource (ex: "en" depuis "Server.Discord.Localization.en.json")
+                    var cultureName = resourceName.Split('.').Reverse().Skip(1).First();
+                    _localizations[cultureName] = localizationData;
+                    _logger.Info($"Loaded embedded localization for '{cultureName}' from resource");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error loading embedded localization resource {resourceName}: {ex.Message}");
+            }
+        }
+    }
+
+    private void LoadFileSystemLocalizations()
+    {
+        if (!Directory.Exists(_localizationPath))
+        {
+            _logger.Warn($"Localization directory not found: {_localizationPath}");
+            return;
+        }
+
+        var localizationFiles = Directory.GetFiles(_localizationPath, "*.json");
+        
+        foreach (var file in localizationFiles)
+        {
+            var locale = Path.GetFileNameWithoutExtension(file);
+            try
+            {
+                var jsonContent = File.ReadAllText(file);
+                var localizationData = JsonSerializer.Deserialize<LocalizationData>(jsonContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                
+                if (localizationData != null)
+                {
+                    _localizations[locale] = localizationData;
+                    _logger.Info($"Loaded localization for '{locale}' from {file}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to load localization file {file}: {ex.Message}");
+            }
         }
     }
     
