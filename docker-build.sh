@@ -30,13 +30,14 @@ for sub in "${!archs[@]}" ; do
     -e DOTNET_CLI_HOME=/app/cache/    \
     -e XDG_DATA_HOME=/app/cache/      \
     mcr.microsoft.com/dotnet/sdk:8.0  \
-      dotnet  publish                 \
+    sh -c "dotnet  publish            \
         ./Server/Server.csproj        \
         -r $arch                      \
         -c Release                    \
         -o ./bin/$sub/                \
         --self-contained              \
-        -p:publishSingleFile=true     \
+        -p:publishSingleFile=true &&  \
+      chmod 755 ./bin/$sub/Server*"   \
   ;
 
   filename="Server"
@@ -47,8 +48,6 @@ for sub in "${!archs[@]}" ; do
   fi
 
 
-  chmod +w ./bin/$sub/Server$ext
-  chmod +w ./bin/
   mv  ./bin/$sub/Server$ext  ./bin/$filename
   rm  -rf  ./bin/$sub/
 done
