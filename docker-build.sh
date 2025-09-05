@@ -46,10 +46,6 @@ for sub in "${!archs[@]}" ; do
   elif [[ "$sub" == "win64" ]] ; then filename="Server.exe"; ext=".exe";
   fi
 
-  # Copy SMO.ico to release directory before cleanup
-  if [[ -f "./bin/$sub/SMO.ico" ]] ; then
-    cp "./bin/$sub/SMO.ico" "./bin/"
-  fi
 
   mv  ./bin/$sub/Server$ext  ./bin/$filename
   rm  -rf  ./bin/$sub/
