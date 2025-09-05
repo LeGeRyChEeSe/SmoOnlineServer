@@ -23,22 +23,41 @@ for sub in "${!archs[@]}" ; do
     continue
   fi
 
-  docker  run                         \
-    --rm                              \
-    --user $(id -u):$(id -g)          \
-    -v "$DOCKER_DIR":/app             \
-    -w /app                           \
-    -e DOTNET_CLI_HOME=/app/cache/    \
-    -e XDG_DATA_HOME=/app/cache/      \
-    mcr.microsoft.com/dotnet/sdk:8.0  \
-      dotnet  publish                 \
-        ./Server/Server.csproj        \
-        -r $arch                      \
-        -c Release                    \
-        -o ./bin/$sub/                \
-        --self-contained              \
-        -p:publishSingleFile=true     \
-  ;
+  # In GitHub Actions, don't use --user flag to avoid permission issues
+  if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+    docker  run                         \
+      --rm                              \
+      -v "$DOCKER_DIR":/app             \
+      -w /app                           \
+      -e DOTNET_CLI_HOME=/app/cache/    \
+      -e XDG_DATA_HOME=/app/cache/      \
+      mcr.microsoft.com/dotnet/sdk:8.0  \
+        dotnet  publish                 \
+          ./Server/Server.csproj        \
+          -r $arch                      \
+          -c Release                    \
+          -o ./bin/$sub/                \
+          --self-contained              \
+          -p:publishSingleFile=true     \
+    ;
+  else
+    docker  run                         \
+      --rm                              \
+      --user $(id -u):$(id -g)          \
+      -v "$DOCKER_DIR":/app             \
+      -w /app                           \
+      -e DOTNET_CLI_HOME=/app/cache/    \
+      -e XDG_DATA_HOME=/app/cache/      \
+      mcr.microsoft.com/dotnet/sdk:8.0  \
+        dotnet  publish                 \
+          ./Server/Server.csproj        \
+          -r $arch                      \
+          -c Release                    \
+          -o ./bin/$sub/                \
+          --self-contained              \
+          -p:publishSingleFile=true     \
+    ;
+  fi
 
   filename="Server"
   ext=""
