@@ -25,19 +25,19 @@ for sub in "${!archs[@]}" ; do
 
   docker  run                         \
     --rm                              \
+    --user $(id -u):$(id -g)          \
     -v "$DOCKER_DIR":/app             \
     -w /app                           \
     -e DOTNET_CLI_HOME=/app/cache/    \
     -e XDG_DATA_HOME=/app/cache/      \
     mcr.microsoft.com/dotnet/sdk:8.0  \
-    sh -c "dotnet  publish            \
+      dotnet  publish                 \
         ./Server/Server.csproj        \
         -r $arch                      \
         -c Release                    \
         -o ./bin/$sub/                \
         --self-contained              \
-        -p:publishSingleFile=true &&  \
-      chmod 755 ./bin/$sub/Server*"   \
+        -p:publishSingleFile=true     \
   ;
 
   filename="Server"
