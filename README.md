@@ -10,12 +10,12 @@
 
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/)
-[![License](https://img.shields.io/github/license/Sanae6/SmoOnlineServer?style=for-the-badge)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/Sanae6/SmoOnlineServer/build.yml?style=for-the-badge)](https://github.com/Sanae6/SmoOnlineServer/actions)
+[![License](https://img.shields.io/github/license/LeGeRyChEeSe/SmoOnlineServer?style=for-the-badge)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/LeGeRyChEeSe/SmoOnlineServer/build.yml?style=for-the-badge)](https://github.com/LeGeRyChEeSe/SmoOnlineServer/actions)
 
-[![GitHub Stars](https://img.shields.io/github/stars/Sanae6/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/Sanae6/SmoOnlineServer/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/Sanae6/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/Sanae6/SmoOnlineServer/network)
-[![GitHub Issues](https://img.shields.io/github/issues/Sanae6/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/Sanae6/SmoOnlineServer/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/LeGeRyChEeSe/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/LeGeRyChEeSe/SmoOnlineServer/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/LeGeRyChEeSe/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/LeGeRyChEeSe/SmoOnlineServer/network)
+[![GitHub Issues](https://img.shields.io/github/issues/LeGeRyChEeSe/SmoOnlineServer?style=for-the-badge&logo=github)](https://github.com/LeGeRyChEeSe/SmoOnlineServer/issues)
 
 ---
 
@@ -99,7 +99,7 @@ graph TB
 
 ```bash
 # Clone and start with single command
-git clone https://github.com/Sanae6/SmoOnlineServer
+git clone https://github.com/LeGeRyChEeSe/SmoOnlineServer
 cd SmoOnlineServer
 docker-compose up -d
 
@@ -111,15 +111,15 @@ docker-compose logs --tail=20 --follow
 
 | Platform | Download | Command |
 |----------|----------|---------|
-| **Windows** | [Latest Release](https://github.com/Sanae6/SmoOnlineServer/releases) | `./Server.exe` |
-| **Linux** | [Latest Release](https://github.com/Sanae6/SmoOnlineServer/releases) | `./Server` |
-| **macOS** | [Latest Release](https://github.com/Sanae6/SmoOnlineServer/releases) | `./Server` |
+| **Windows** | [Latest Release](https://github.com/LeGeRyChEeSe/SmoOnlineServer/releases) | `./Server.exe` |
+| **Linux** | [Latest Release](https://github.com/LeGeRyChEeSe/SmoOnlineServer/releases) | `./Server` |
+| **macOS** | [Latest Release](https://github.com/LeGeRyChEeSe/SmoOnlineServer/releases) | `./Server` |
 
 ### Build from Source
 
 ```bash
 # Prerequisites: .NET 8.0 SDK
-git clone https://github.com/Sanae6/SmoOnlineServer
+git clone https://github.com/LeGeRyChEeSe/SmoOnlineServer
 cd SmoOnlineServer
 
 # Development build
@@ -464,7 +464,7 @@ This project is licensed under the same terms as the original Super Mario Odysse
 
 **Built with care by the SMO community**
 
-[![Contributors](https://img.shields.io/github/contributors/Sanae6/SmoOnlineServer?style=for-the-badge)](https://github.com/Sanae6/SmoOnlineServer/graphs/contributors)
+[![Contributors](https://img.shields.io/github/contributors/LeGeRyChEeSe/SmoOnlineServer?style=for-the-badge)](https://github.com/LeGeRyChEeSe/SmoOnlineServer/graphs/contributors)
 
 Special thanks to:
 - [Super Mario Odyssey Online](https://github.com/CraftyBoss/SuperMarioOdysseyOnline) team
@@ -473,6 +473,6 @@ Special thanks to:
 
 ---
 
-**[Star this repo](https://github.com/Sanae6/SmoOnlineServer) • [Report Bug](https://github.com/Sanae6/SmoOnlineServer/issues) • [Request Feature](https://github.com/Sanae6/SmoOnlineServer/issues)**
+**[Star this repo](https://github.com/LeGeRyChEeSe/SmoOnlineServer) • [Report Bug](https://github.com/LeGeRyChEeSe/SmoOnlineServer/issues) • [Request Feature](https://github.com/LeGeRyChEeSe/SmoOnlineServer/issues)**
 
 </div>
